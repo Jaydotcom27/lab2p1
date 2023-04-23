@@ -80,6 +80,6 @@ if __name__ == "__main__":
 
     # Getting final probability (this is a rough estimate based on a portion of the data since the dataset is gigantic)
     final_probability = yes_count / total_count
-    print("The probability of a black car parking illegally is:", final_probability)
+    print("The probability is:", final_probability)
         
    
