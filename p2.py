@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 from pyspark.sql import SparkSession
-import pyspark.sql.functions as psf
+# import pyspark.sql.functions as psf
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, LongType
 
 # I was having trouble with letting the spark csv reader infer the schema so I had to build it manually
@@ -54,21 +54,18 @@ schema = StructType([
 ])
 
 STREETS = ["34510", "10030", "34050"]
-COLORS = ["Black", "BLK", "BK", "BK.", "BLAC", "BK/", "BCK", "BLK.", "B LAC", "BC"]
+COLORS = ['BLAC', 'BK', 'BK/', 'BC', 'BCK', 'Black', 'BLK.', 'BK.', 'BLK', 'B LAC']
 
 if __name__ == "__main__":
-    # Get file path from command-line argument
     file_path = str(sys.argv[1]).strip()
-
-    # Create a Spark session
     spark = SparkSession.builder.appName("BlackCarTicket").getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
 
-    # Read CSV file with predefined schema and select required columns
+    # selecting relevant cols from the csv 
     violations = spark.read.csv(file_path, header=True, schema=schema)
     violations = violations.select("Vehicle Color", "Street Code1", "Street Code2", "Street Code3").na.drop()
 
-    # Count the number of black car violations on specified streets
+    # Finding the number of violations in the required streets and only for black cars
     black_car_violations = violations.filter(
         violations["Vehicle Color"].isin(COLORS) &
         (
@@ -78,14 +75,12 @@ if __name__ == "__main__":
         )
     )
     yes_count = black_car_violations.count()
-
-    # Count the total number of violations
+    print(yes_count)
     total_count = violations.select("Vehicle Color").count()
+    print(total_count)
 
-    # Calculate the probability of a black car parking illegally on specified streets
+    # Getting final probability (this is a rough estimate based on a portion of the data since the dataset is gigantic)
     final_probability = yes_count / total_count
-
-    # Print the result
     print("The probability of a black car parking illegally is:", final_probability)
         
    
