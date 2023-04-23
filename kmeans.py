@@ -52,6 +52,7 @@ from pyspark.sql.functions import when, round, avg
 from pyspark.ml.feature import VectorAssembler
 from pyspark.sql import SparkSession
 from pyspark.ml.clustering import KMeans
+import sys
 
 # Define a main function for better organization and testing
 def main(players):
