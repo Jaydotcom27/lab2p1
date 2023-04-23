@@ -53,34 +53,39 @@ schema = StructType([
     StructField("Double Parking Violation", StringType(), True)
 ])
 
-Street = ["34510", "10030", "34050"]
-colors = ["Black", "BLK", "BK", "BK.", "BLAC", "BK/","BCK","BLK.","B LAC","BC"]
+STREETS = ["34510", "10030", "34050"]
+COLORS = ["Black", "BLK", "BK", "BK.", "BLAC", "BK/", "BCK", "BLK.", "B LAC", "BC"]
 
 if __name__ == "__main__":
-    file = str(sys.argv[1]).strip()
-    spark = SparkSession.builder\
-        .appName("BlackCarTicket").getOrCreate()
+    # Get file path from command-line argument
+    file_path = str(sys.argv[1]).strip()
+
+    # Create a Spark session
+    spark = SparkSession.builder.appName("BlackCarTicket").getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
 
-    #Data 
-    violations = spark.read.csv(file, header=True, schema=schema)
+    # Read CSV file with predefined schema and select required columns
+    violations = spark.read.csv(file_path, header=True, schema=schema)
+    violations = violations.select("Vehicle Color", "Street Code1", "Street Code2", "Street Code3").na.drop()
 
-    #Filtering base on condition
-    violations=violations.select('Vehicle Color','Street Code1','Street Code2','Street Code3').na.drop()
+    # Count the number of black car violations on specified streets
+    black_car_violations = violations.filter(
+        violations["Vehicle Color"].isin(COLORS) &
+        (
+            violations["Street Code1"].isin(STREETS) |
+            violations["Street Code2"].isin(STREETS) |
+            violations["Street Code3"].isin(STREETS)
+        )
+    )
+    yes_count = black_car_violations.count()
 
-    #Total black car violation with in streets ["34510", "10030", "34050"]
-    yes_count = violations.filter(violations['Vehicle Color'].isin(colors) & (violations['Street Code1'].isin(Street)) | (violations['Street Code2'].isin(Street)) |(violations['Street Code3'].isin(Street))).count()
-    #Total Violation Records
-    total_count = violations.select('Vehicle Color').count()
-    
-    #print(f'Yes value is: {yes_count}')
-    #print(f'Total Value is: {total_count}')
-    
-    #Probality calculation
-    final_probalility = yes_count/total_count
+    # Count the total number of violations
+    total_count = violations.select("Vehicle Color").count()
 
-    print("The Probability of Black vehicle parking illegally is:",final_probalility)
+    # Calculate the probability of a black car parking illegally on specified streets
+    final_probability = yes_count / total_count
 
-        
+    # Print the result
+    print("The probability of a black car parking illegally is:", final_probability)
         
    
