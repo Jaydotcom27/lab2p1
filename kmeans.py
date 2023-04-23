@@ -48,7 +48,7 @@
 
 # Import necessary modules, including some specific functions instead of the whole module
 import sys
-from pyspark.sql.functions import when, round
+from pyspark.sql.functions import when, round, avg
 from pyspark.ml.feature import VectorAssembler
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType
