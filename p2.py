@@ -4,6 +4,9 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as psf
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, LongType
 
+# I was having trouble with letting the spark csv reader infer the schema so I had to build it manually
+# This is a bit cluttery but doesn't affect performance or results 
+
 schema = StructType([
     StructField("Summons Number", LongType(), True),
     StructField("Plate ID", StringType(), True),
