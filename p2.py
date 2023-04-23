@@ -2,7 +2,7 @@
 import sys
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as psf
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, LongType
 
 schema = StructType([
     StructField("Summons Number", LongType(), True),
