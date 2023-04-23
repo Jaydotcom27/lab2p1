@@ -1,6 +1,5 @@
 #!/bin/bash
 source ../env.sh
-../start.sh
 /usr/local/hadoop/bin/hdfs dfs -rm -r /part1/input/
 /usr/local/hadoop/bin/hdfs dfs -rm -r /part1/output
 /usr/local/hadoop/bin/hdfs dfs -mkdir -p /part1/input/
