@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import sys
 from pyspark.sql import SparkSession
-# import pyspark.sql.functions as psf
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, LongType
 
 # I was having trouble with letting the spark csv reader infer the schema so I had to build it manually
@@ -58,7 +57,7 @@ COLORS = ['BLAC', 'BK', 'BK/', 'BC', 'BCK', 'Black', 'BLK.', 'BK.', 'BLK', 'B LA
 
 if __name__ == "__main__":
     file_path = str(sys.argv[1]).strip()
-    spark = SparkSession.builder.appName("BlackCarTicket").getOrCreate()
+    spark = SparkSession.builder.appName("black_car").getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
 
     # selecting relevant cols from the csv 
