@@ -6,7 +6,7 @@ from pyspark.ml.clustering import KMeans
 
 def main(players):
     spark = SparkSession.builder\
-        .appName("kmeans").getOrCreate()
+        .appName("shots_kmeans").getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
 
     # selecting relevant cols from the csv 
