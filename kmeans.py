@@ -92,11 +92,18 @@ def main(players):
     kmeans = KMeans(k=4, seed=1)
     model = kmeans.fit(train_data)
 
-    # Use the test data set to make predictions using the trained model
-    predictions = model.transform(test_data)
+    # # Use the test data set to make predictions using the trained model
+    # predictions = model.transform(test_data)
 
-    # Join the hit rate data frame with the predictions data frame to add a new column containing the predicted cluster for each player
-    hit_rate = hit_rate.join(predictions.select('player_id', 'prediction'), 'player_id', 'inner')
+    # # Join the hit rate data frame with the predictions data frame to add a new column containing the predicted cluster for each player
+    # hit_rate = hit_rate.join(predictions.select('player_id', 'prediction'), 'player_id', 'inner')
+
+    predictions = model.transform(test_data)
+    predictions = predictions.join(avg_shot_data.select('player_id', 'player_name'), 'player_id', 'inner')
+    predictions.show()
+
+    hitRate = hitRate.join(predictions.select('player_id', 'prediction', 'player_name'), 'player_id', 'inner')
+    hitRate.show()
 
     # Print the cluster centers to the console
     centers = model.clusterCenters()
